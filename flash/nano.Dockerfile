@@ -44,4 +44,8 @@ ARG TARGET_BOARD
 ARG ROOT_DEVICE
 ENV TARGET_BOARD=$TARGET_BOARD
 ENV ROOT_DEVICE=$ROOT_DEVICE
-ENTRYPOINT ["sh", "-c", "sudo ./flash.sh $TARGET_BOARD $ROOT_DEVICE"]
+RUN echo "#!/bin/bash" >> entrypoint.sh && \
+    echo "echo \"sudo ./flash.sh \$* ${TARGET_BOARD} ${ROOT_DEVICE}\"" >> entrypoint.sh && \
+    echo "sudo ./flash.sh \$* ${TARGET_BOARD} ${ROOT_DEVICE}" >> entrypoint.sh && \
+    chmod +x entrypoint.sh
+ENTRYPOINT ["sh", "-c", "sudo ./entrypoint.sh $*"]
